@@ -4,11 +4,25 @@ const MAX: usize = 11;
 fn main() -> Result<(), Box<std::error::Error>> {
     use std::io::Write;
 
+    let dox = std::env::var("CARGO_FEATURE_DOX").is_ok();
+
     let versions = {
         let mut versions: std::collections::HashSet<_> = Default::default();
 
+        let mut v1 = None;
+
         for v in MIN..=MAX {
             if std::env::var(format!("CARGO_FEATURE_V1_{}", v)).is_ok() {
+                if !dox {
+                    v1 = match v1 {
+                        Some(v1) => panic!(
+                            "Both v1_{} and v1_{} features are enabled on the k8s-openapi crate. Only one feature can be enabled at the same time.",
+                            v1, v
+                        ),
+                        None => Some(v),
+                    };
+                }
+
                 versions.insert(v);
             }
         }
