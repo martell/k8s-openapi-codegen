@@ -1,9 +1,9 @@
 pub(crate) const ALL: &[SupportedVersion] = &[
-	SupportedVersion::V1_7,
-	SupportedVersion::V1_8,
-	SupportedVersion::V1_9,
-	SupportedVersion::V1_10,
-	SupportedVersion::V1_11,
+	// SupportedVersion::V1_7,
+	// SupportedVersion::V1_8,
+	// SupportedVersion::V1_9,
+	// SupportedVersion::V1_10,
+	// SupportedVersion::V1_11,
 	SupportedVersion::V1_12,
 ];
 

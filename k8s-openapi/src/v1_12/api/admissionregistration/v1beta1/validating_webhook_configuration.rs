@@ -3,12 +3,6 @@
 /// ValidatingWebhookConfiguration describes the configuration of and admission webhook that accept or reject and object without changing it.
 #[derive(Clone, Debug, Default, PartialEq)]
 pub struct ValidatingWebhookConfiguration {
-    /// APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#resources
-    pub api_version: Option<String>,
-
-    /// Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#types-kinds
-    pub kind: Option<String>,
-
     /// Standard object metadata; More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#metadata.
     pub metadata: Option<::v1_12::apimachinery::pkg::apis::meta::v1::ObjectMeta>,
 
@@ -921,6 +915,16 @@ impl ::Response for WatchAdmissionregistrationV1beta1ValidatingWebhookConfigurat
 
 // End admissionregistration.k8s.io/v1beta1/ValidatingWebhookConfiguration
 
+impl ::TypeMeta for ValidatingWebhookConfiguration {
+    fn api_version() -> &'static str {
+        "admissionregistration.k8s.io/v1beta1"
+    }
+
+    fn kind() -> &'static str {
+        "ValidatingWebhookConfiguration"
+    }
+}
+
 impl<'de> ::serde::Deserialize<'de> for ValidatingWebhookConfiguration {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error> where D: ::serde::Deserializer<'de> {
         #[allow(non_camel_case_types)]
@@ -968,15 +972,23 @@ impl<'de> ::serde::Deserialize<'de> for ValidatingWebhookConfiguration {
             }
 
             fn visit_map<A>(self, mut map: A) -> Result<Self::Value, A::Error> where A: ::serde::de::MapAccess<'de> {
-                let mut value_api_version: Option<String> = None;
-                let mut value_kind: Option<String> = None;
                 let mut value_metadata: Option<::v1_12::apimachinery::pkg::apis::meta::v1::ObjectMeta> = None;
                 let mut value_webhooks: Option<Vec<::v1_12::api::admissionregistration::v1beta1::Webhook>> = None;
 
                 while let Some(key) = ::serde::de::MapAccess::next_key::<Field>(&mut map)? {
                     match key {
-                        Field::Key_api_version => value_api_version = ::serde::de::MapAccess::next_value(&mut map)?,
-                        Field::Key_kind => value_kind = ::serde::de::MapAccess::next_value(&mut map)?,
+                        Field::Key_api_version => {
+                            let value_api_version: String = ::serde::de::MapAccess::next_value(&mut map)?;
+                            if value_api_version != <Self::Value as ::TypeMeta>::api_version() {
+                                return Err(::serde::de::Error::invalid_value(::serde::de::Unexpected::Str(&value_api_version), &<Self::Value as ::TypeMeta>::api_version()));
+                            }
+                        },
+                        Field::Key_kind => {
+                            let value_kind: String = ::serde::de::MapAccess::next_value(&mut map)?;
+                            if value_kind != <Self::Value as ::TypeMeta>::kind() {
+                                return Err(::serde::de::Error::invalid_value(::serde::de::Unexpected::Str(&value_kind), &<Self::Value as ::TypeMeta>::kind()));
+                            }
+                        },
                         Field::Key_metadata => value_metadata = ::serde::de::MapAccess::next_value(&mut map)?,
                         Field::Key_webhooks => value_webhooks = ::serde::de::MapAccess::next_value(&mut map)?,
                         Field::Other => { let _: ::serde::de::IgnoredAny = ::serde::de::MapAccess::next_value(&mut map)?; },
@@ -984,8 +996,6 @@ impl<'de> ::serde::Deserialize<'de> for ValidatingWebhookConfiguration {
                 }
 
                 Ok(ValidatingWebhookConfiguration {
-                    api_version: value_api_version,
-                    kind: value_kind,
                     metadata: value_metadata,
                     webhooks: value_webhooks,
                 })
@@ -1010,17 +1020,12 @@ impl ::serde::Serialize for ValidatingWebhookConfiguration {
         let mut state = serializer.serialize_struct(
             "ValidatingWebhookConfiguration",
             0 +
-            self.api_version.as_ref().map_or(0, |_| 1) +
-            self.kind.as_ref().map_or(0, |_| 1) +
+            2 +
             self.metadata.as_ref().map_or(0, |_| 1) +
             self.webhooks.as_ref().map_or(0, |_| 1),
         )?;
-        if let Some(value) = &self.api_version {
-            ::serde::ser::SerializeStruct::serialize_field(&mut state, "apiVersion", value)?;
-        }
-        if let Some(value) = &self.kind {
-            ::serde::ser::SerializeStruct::serialize_field(&mut state, "kind", value)?;
-        }
+        ::serde::ser::SerializeStruct::serialize_field(&mut state, "apiVersion", <Self as ::TypeMeta>::api_version())?;
+        ::serde::ser::SerializeStruct::serialize_field(&mut state, "kind", <Self as ::TypeMeta>::kind())?;
         if let Some(value) = &self.metadata {
             ::serde::ser::SerializeStruct::serialize_field(&mut state, "metadata", value)?;
         }

@@ -209,6 +209,28 @@ impl serde::Serialize for ByteString {
     }
 }
 
+pub trait TypeMeta {
+    fn api_version() -> &'static str;
+
+    fn kind() -> &'static str;
+}
+
+pub trait ValueMeta {
+    fn api_version(&self) -> &'static str;
+
+    fn kind(&self) -> &'static str;
+}
+
+impl<T> ValueMeta for T where T: TypeMeta {
+    fn api_version(&self) -> &'static str {
+        <Self as TypeMeta>::api_version()
+    }
+
+    fn kind(&self) -> &'static str {
+        <Self as TypeMeta>::kind()
+    }
+}
+
 /// The type of errors returned by the Kubernetes API functions that prepare the HTTP request.
 #[derive(Debug)]
 pub enum RequestError {
