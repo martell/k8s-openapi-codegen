@@ -298,7 +298,7 @@ fn run(supported_version: supported_version::SupportedVersion, out_dir_base: &st
 
 				if let Some(resource_api_version_kind) = &resource_api_version_kind {
 					writeln!(file)?;
-					writeln!(file, "impl ::TypeMeta for {} {{", type_name)?;
+					writeln!(file, "impl ::Resource for {} {{", type_name)?;
 					writeln!(file, "    fn api_version() -> &'static str {{")?;
 					writeln!(file, r#"        "{}""#, resource_api_version_kind.0)?;
 					writeln!(file, "    }}")?;
@@ -377,15 +377,15 @@ fn run(supported_version: supported_version::SupportedVersion, out_dir_base: &st
 				if resource_api_version_kind.is_some() {
 						writeln!(file, r#"                        Field::Key_api_version => {{"#)?;
 						writeln!(file, r#"                            let value_api_version: String = ::serde::de::MapAccess::next_value(&mut map)?;"#)?;
-						writeln!(file, r#"                            if value_api_version != <Self::Value as ::TypeMeta>::api_version() {{"#)?;
-						writeln!(file, r#"                                return Err(::serde::de::Error::invalid_value(::serde::de::Unexpected::Str(&value_api_version), &<Self::Value as ::TypeMeta>::api_version()));"#)?;
+						writeln!(file, r#"                            if value_api_version != <Self::Value as ::Resource>::api_version() {{"#)?;
+						writeln!(file, r#"                                return Err(::serde::de::Error::invalid_value(::serde::de::Unexpected::Str(&value_api_version), &<Self::Value as ::Resource>::api_version()));"#)?;
 						writeln!(file, r#"                            }}"#)?;
 						writeln!(file, r#"                        }},"#)?;
 
 						writeln!(file, r#"                        Field::Key_kind => {{"#)?;
 						writeln!(file, r#"                            let value_kind: String = ::serde::de::MapAccess::next_value(&mut map)?;"#)?;
-						writeln!(file, r#"                            if value_kind != <Self::Value as ::TypeMeta>::kind() {{"#)?;
-						writeln!(file, r#"                                return Err(::serde::de::Error::invalid_value(::serde::de::Unexpected::Str(&value_kind), &<Self::Value as ::TypeMeta>::kind()));"#)?;
+						writeln!(file, r#"                            if value_kind != <Self::Value as ::Resource>::kind() {{"#)?;
+						writeln!(file, r#"                                return Err(::serde::de::Error::invalid_value(::serde::de::Unexpected::Str(&value_kind), &<Self::Value as ::Resource>::kind()));"#)?;
 						writeln!(file, r#"                            }}"#)?;
 						writeln!(file, r#"                        }},"#)?;
 				}
@@ -457,8 +457,8 @@ fn run(supported_version: supported_version::SupportedVersion, out_dir_base: &st
 				writeln!(file, ",")?;
 				writeln!(file, "        )?;")?;
 				if resource_api_version_kind.is_some() {
-					writeln!(file, r#"        ::serde::ser::SerializeStruct::serialize_field(&mut state, "apiVersion", <Self as ::TypeMeta>::api_version())?;"#)?;
-					writeln!(file, r#"        ::serde::ser::SerializeStruct::serialize_field(&mut state, "kind", <Self as ::TypeMeta>::kind())?;"#)?;
+					writeln!(file, r#"        ::serde::ser::SerializeStruct::serialize_field(&mut state, "apiVersion", <Self as ::Resource>::api_version())?;"#)?;
+					writeln!(file, r#"        ::serde::ser::SerializeStruct::serialize_field(&mut state, "kind", <Self as ::Resource>::kind())?;"#)?;
 				}
 				for Property { name, required, field_name, .. } in &properties {
 					if *required {

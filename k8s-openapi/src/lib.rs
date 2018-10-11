@@ -209,26 +209,18 @@ impl serde::Serialize for ByteString {
     }
 }
 
-pub trait TypeMeta {
+pub trait Resource {
     fn api_version() -> &'static str;
 
     fn kind() -> &'static str;
 }
 
-pub trait ValueMeta {
-    fn api_version(&self) -> &'static str;
-
-    fn kind(&self) -> &'static str;
+pub fn api_version<T>(_: &T) -> &'static str where T: Resource {
+    <T as Resource>::api_version()
 }
 
-impl<T> ValueMeta for T where T: TypeMeta {
-    fn api_version(&self) -> &'static str {
-        <Self as TypeMeta>::api_version()
-    }
-
-    fn kind(&self) -> &'static str {
-        <Self as TypeMeta>::kind()
-    }
+pub fn kind<T>(_: &T) -> &'static str where T: Resource {
+    <T as Resource>::kind()
 }
 
 /// The type of errors returned by the Kubernetes API functions that prepare the HTTP request.

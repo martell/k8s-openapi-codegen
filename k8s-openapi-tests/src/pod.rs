@@ -37,7 +37,7 @@ fn list() {
 			other => Err(format!("{:?} {}", other, status_code).into()),
 		}).expect("couldn't list pods");
 
-	assert_eq!(::k8s_openapi::ValueMeta::kind(&pod_list), "PodList");
+	assert_eq!(::k8s_openapi::kind(&pod_list), "PodList");
 
 	let addon_manager_pod =
 		pod_list

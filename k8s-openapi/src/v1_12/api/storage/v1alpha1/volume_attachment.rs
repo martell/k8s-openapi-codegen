@@ -920,7 +920,7 @@ impl ::Response for WatchStorageV1alpha1VolumeAttachmentListResponse {
 
 // End storage.k8s.io/v1alpha1/VolumeAttachment
 
-impl ::TypeMeta for VolumeAttachment {
+impl ::Resource for VolumeAttachment {
     fn api_version() -> &'static str {
         "storage.k8s.io/v1alpha1"
     }
@@ -987,14 +987,14 @@ impl<'de> ::serde::Deserialize<'de> for VolumeAttachment {
                     match key {
                         Field::Key_api_version => {
                             let value_api_version: String = ::serde::de::MapAccess::next_value(&mut map)?;
-                            if value_api_version != <Self::Value as ::TypeMeta>::api_version() {
-                                return Err(::serde::de::Error::invalid_value(::serde::de::Unexpected::Str(&value_api_version), &<Self::Value as ::TypeMeta>::api_version()));
+                            if value_api_version != <Self::Value as ::Resource>::api_version() {
+                                return Err(::serde::de::Error::invalid_value(::serde::de::Unexpected::Str(&value_api_version), &<Self::Value as ::Resource>::api_version()));
                             }
                         },
                         Field::Key_kind => {
                             let value_kind: String = ::serde::de::MapAccess::next_value(&mut map)?;
-                            if value_kind != <Self::Value as ::TypeMeta>::kind() {
-                                return Err(::serde::de::Error::invalid_value(::serde::de::Unexpected::Str(&value_kind), &<Self::Value as ::TypeMeta>::kind()));
+                            if value_kind != <Self::Value as ::Resource>::kind() {
+                                return Err(::serde::de::Error::invalid_value(::serde::de::Unexpected::Str(&value_kind), &<Self::Value as ::Resource>::kind()));
                             }
                         },
                         Field::Key_metadata => value_metadata = ::serde::de::MapAccess::next_value(&mut map)?,
@@ -1036,8 +1036,8 @@ impl ::serde::Serialize for VolumeAttachment {
             1 +
             self.status.as_ref().map_or(0, |_| 1),
         )?;
-        ::serde::ser::SerializeStruct::serialize_field(&mut state, "apiVersion", <Self as ::TypeMeta>::api_version())?;
-        ::serde::ser::SerializeStruct::serialize_field(&mut state, "kind", <Self as ::TypeMeta>::kind())?;
+        ::serde::ser::SerializeStruct::serialize_field(&mut state, "apiVersion", <Self as ::Resource>::api_version())?;
+        ::serde::ser::SerializeStruct::serialize_field(&mut state, "kind", <Self as ::Resource>::kind())?;
         if let Some(value) = &self.metadata {
             ::serde::ser::SerializeStruct::serialize_field(&mut state, "metadata", value)?;
         }

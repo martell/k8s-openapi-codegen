@@ -193,7 +193,7 @@ impl ::Response for ReadCoreV1ComponentStatusResponse {
 
 // End /v1/ComponentStatus
 
-impl ::TypeMeta for ComponentStatus {
+impl ::Resource for ComponentStatus {
     fn api_version() -> &'static str {
         "v1"
     }
@@ -257,14 +257,14 @@ impl<'de> ::serde::Deserialize<'de> for ComponentStatus {
                     match key {
                         Field::Key_api_version => {
                             let value_api_version: String = ::serde::de::MapAccess::next_value(&mut map)?;
-                            if value_api_version != <Self::Value as ::TypeMeta>::api_version() {
-                                return Err(::serde::de::Error::invalid_value(::serde::de::Unexpected::Str(&value_api_version), &<Self::Value as ::TypeMeta>::api_version()));
+                            if value_api_version != <Self::Value as ::Resource>::api_version() {
+                                return Err(::serde::de::Error::invalid_value(::serde::de::Unexpected::Str(&value_api_version), &<Self::Value as ::Resource>::api_version()));
                             }
                         },
                         Field::Key_kind => {
                             let value_kind: String = ::serde::de::MapAccess::next_value(&mut map)?;
-                            if value_kind != <Self::Value as ::TypeMeta>::kind() {
-                                return Err(::serde::de::Error::invalid_value(::serde::de::Unexpected::Str(&value_kind), &<Self::Value as ::TypeMeta>::kind()));
+                            if value_kind != <Self::Value as ::Resource>::kind() {
+                                return Err(::serde::de::Error::invalid_value(::serde::de::Unexpected::Str(&value_kind), &<Self::Value as ::Resource>::kind()));
                             }
                         },
                         Field::Key_conditions => value_conditions = ::serde::de::MapAccess::next_value(&mut map)?,
@@ -302,8 +302,8 @@ impl ::serde::Serialize for ComponentStatus {
             self.conditions.as_ref().map_or(0, |_| 1) +
             self.metadata.as_ref().map_or(0, |_| 1),
         )?;
-        ::serde::ser::SerializeStruct::serialize_field(&mut state, "apiVersion", <Self as ::TypeMeta>::api_version())?;
-        ::serde::ser::SerializeStruct::serialize_field(&mut state, "kind", <Self as ::TypeMeta>::kind())?;
+        ::serde::ser::SerializeStruct::serialize_field(&mut state, "apiVersion", <Self as ::Resource>::api_version())?;
+        ::serde::ser::SerializeStruct::serialize_field(&mut state, "kind", <Self as ::Resource>::kind())?;
         if let Some(value) = &self.conditions {
             ::serde::ser::SerializeStruct::serialize_field(&mut state, "conditions", value)?;
         }
