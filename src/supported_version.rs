@@ -36,7 +36,7 @@ impl SupportedVersion {
 			SupportedVersion::V1_9 => "https://raw.githubusercontent.com/kubernetes/kubernetes/v1.9.11/api/openapi-spec/swagger.json",
 			SupportedVersion::V1_10 => "https://raw.githubusercontent.com/kubernetes/kubernetes/v1.10.8/api/openapi-spec/swagger.json",
 			SupportedVersion::V1_11 => "https://raw.githubusercontent.com/kubernetes/kubernetes/v1.11.3/api/openapi-spec/swagger.json",
-			SupportedVersion::V1_12 => "https://raw.githubusercontent.com/kubernetes/kubernetes/v1.12.0/api/openapi-spec/swagger.json",
+			SupportedVersion::V1_12 => "https://raw.githubusercontent.com/kubernetes/kubernetes/v1.12.1/api/openapi-spec/swagger.json",
 		}
 	}
 
@@ -45,14 +45,12 @@ impl SupportedVersion {
 		let fixups: &[fn(&mut ::swagger20::Spec) -> Result<(), ::Error>] = match self {
 			SupportedVersion::V1_7 => &[
 				::fixups::apigroup_optional_properties,
-				::fixups::apiresource_gkv,
 				::fixups::apiservicev1beta1_gkv,
 				::fixups::raw_extension_ty,
 			],
 
 			SupportedVersion::V1_8 => &[
 				::fixups::apigroup_optional_properties,
-				::fixups::apiresource_gkv,
 				::fixups::apiservicev1beta1_gkv,
 				::fixups::crd_gkv,
 				::fixups::crdstatus_optional_properties,
@@ -68,7 +66,6 @@ impl SupportedVersion {
 
 			SupportedVersion::V1_9 => &[
 				::fixups::apigroup_optional_properties,
-				::fixups::apiresource_gkv,
 				::fixups::apiservicev1beta1_gkv,
 				::fixups::crd_gkv,
 				::fixups::crdstatus_optional_properties,
@@ -84,7 +81,6 @@ impl SupportedVersion {
 
 			SupportedVersion::V1_10 => &[
 				::fixups::apigroup_optional_properties,
-				::fixups::apiresource_gkv,
 				::fixups::apiservicev1beta1_gkv,
 				::fixups::apiservicev1_gkv,
 				::fixups::crd_gkv,

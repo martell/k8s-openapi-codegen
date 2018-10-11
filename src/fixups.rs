@@ -26,25 +26,6 @@ pub(crate) fn apigroup_optional_properties(spec: &mut ::swagger20::Spec) -> Resu
 //
 // Ref: https://github.com/kubernetes/kubernetes/issues/49465
 // Ref: https://github.com/kubernetes/kubernetes/pull/64174
-pub(crate) fn apiresource_gkv(spec: &mut ::swagger20::Spec) -> Result<(), ::Error> {
-	for (definition_path, definition) in &mut spec.definitions {
-		if definition.kubernetes_group_kind_versions.is_none() && &**definition_path == "io.k8s.apimachinery.pkg.apis.meta.v1.APIResource" {
-			definition.kubernetes_group_kind_versions = Some(vec![::swagger20::KubernetesGroupKindVersion {
-				group: "".to_string(),
-				kind: "APIResource".to_string(),
-				version: "v1".to_string(),
-			}]);
-			return Ok(());
-		}
-	}
-
-	Err("never applied APIResource kubernetes_group_kind_version override".into())
-}
-
-// Type not annotated with "x-kubernetes-group-kind-versions", which would make its associated functions end up in the mod root
-//
-// Ref: https://github.com/kubernetes/kubernetes/issues/49465
-// Ref: https://github.com/kubernetes/kubernetes/pull/64174
 pub(crate) fn apiservicev1beta1_gkv(spec: &mut ::swagger20::Spec) -> Result<(), ::Error> {
 	for (definition_path, definition) in &mut spec.definitions {
 		if definition.kubernetes_group_kind_versions.is_none() && &**definition_path == "io.k8s.kube-aggregator.pkg.apis.apiregistration.v1beta1.APIService" {
@@ -120,7 +101,7 @@ pub(crate) fn crdstatus_optional_properties(spec: &mut ::swagger20::Spec) -> Res
 	Err("never applied CustomResourceDefinitionStatus optional properties override".into())
 }
 
-// The spec says that `createAppsV1beta1NamespacedDeploymentRollback` returns `DeploymentRollback`, but it returns `DeploymentStatus`.
+// The spec says that `createAppsV1beta1NamespacedDeploymentRollback` returns `DeploymentRollback`, but it returns `Status`.
 //
 // Ref: https://github.com/kubernetes/kubernetes/pull/63837
 pub(crate) fn deployment_rollback_create_response_type(spec: &mut ::swagger20::Spec) -> Result<(), ::Error> {
@@ -132,7 +113,7 @@ pub(crate) fn deployment_rollback_create_response_type(spec: &mut ::swagger20::S
 				for response in operation.responses.values_mut() {
 					if let Some(::swagger20::Schema { kind: ::swagger20::SchemaKind::Ref(::swagger20::RefPath(ref_path)), .. }) = response {
 						if ref_path == "io.k8s.api.apps.v1beta1.DeploymentRollback" {
-							::std::mem::replace(ref_path, "io.k8s.api.apps.v1beta1.DeploymentStatus".to_string());
+							::std::mem::replace(ref_path, "io.k8s.apimachinery.pkg.apis.meta.v1.Status".to_string());
 							found = true;
 						}
 					}
